@@ -4,19 +4,7 @@
 
 #include "args.h"
 
-void args_free(args_t *args)
-{
-    if (args == NULL)
-        return;
-    if (args->argv != NULL) {
-        for (uint32_t i = 0; i < args->argc; i++)
-            if (args->argv[i] != NULL)
-                free(args->argv[i]);
-        free(args->argv);
-    }
-    free(args);
-}
-
+static
 args_t *args_init(void)
 {
     args_t *args = malloc(sizeof(*args));
@@ -28,6 +16,19 @@ args_t *args_init(void)
         .argv = NULL,
     };
     return args;
+}
+
+void args_free(args_t *args)
+{
+    if (args == NULL)
+        return;
+    if (args->argv != NULL) {
+        for (uint32_t i = 0; i < args->argc; i++)
+            if (args->argv[i] != NULL)
+                free(args->argv[i]);
+        free(args->argv);
+    }
+    free(args);
 }
 
 static
