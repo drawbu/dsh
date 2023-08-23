@@ -4,5 +4,6 @@ debug
 test
 
 # Build
+compile_commands.json
 .build
 result
