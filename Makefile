@@ -23,6 +23,7 @@ SRC_DEBUG := $(SRC)
 VPATH += tests
 SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
+SRC_TESTS += test_process_input.c
 
 # ↓ Objects
 OBJ := $(SRC:%.c=$(BUILD_DIR)/release/%.o)
@@ -90,6 +91,9 @@ $(NAME_TESTS): CFLAGS += -lcriterion
 $(NAME_TESTS): $(OBJ_TESTS)
 	@ $(ECHO) "[$(C_RED)$(C_BOLD)CC$(C_RESET)] $(C_PURPLE)$@$(C_RESET)"
 	@ $(CC) -o $@ $^ $(CFLAGS) || $(DIE)
+
+run_tests: $(NAME_TESTS)
+	@ ./$(NAME_TESTS)
 
 # ↓ Clean rules
 clean:

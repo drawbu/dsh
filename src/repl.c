@@ -7,20 +7,6 @@
 #include "repl.h"
 #include "status.h"
 
-static
-void shell_free(shell_t *shell)
-{
-    if (shell == NULL)
-        return;
-    if (shell->input != NULL) {
-        if (shell->input->input != NULL)
-            free(shell->input->input);
-        free(shell->input);
-    }
-    free(shell);
-}
-
-static
 shell_t *shell_init(void)
 {
     shell_t *shell = malloc(sizeof(*shell));
@@ -41,6 +27,18 @@ shell_t *shell_init(void)
         .len = 0,
     };
     return shell;
+}
+
+void shell_free(shell_t *shell)
+{
+    if (shell == NULL)
+        return;
+    if (shell->input != NULL) {
+        if (shell->input->input != NULL)
+            free(shell->input->input);
+        free(shell->input);
+    }
+    free(shell);
 }
 
 int process_input(shell_t *shell)

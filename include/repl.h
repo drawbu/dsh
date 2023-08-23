@@ -18,5 +18,7 @@ typedef struct {
 
 status_t repl_run(void);
 int process_input(shell_t *shell);
+void shell_free(shell_t *shell);
+shell_t *shell_init(void);
 
 #endif /* REPL_H */
