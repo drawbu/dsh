@@ -59,3 +59,13 @@ Test(args_parser, ptr_reset) {
     parser_reset_ptr(parser);
     cr_assert_str_eq(parser_next_token(parser), "foo");
 }
+
+Test(args_parser, always_empty) {
+    parser_t *parser = parser_init("");
+    char *expected_ptr = parser->ptr;
+
+    cr_assert_null(parser_next_token(parser));
+    cr_assert_eq(parser->ptr, expected_ptr);
+    cr_assert_null(parser_next_token(parser));
+    cr_assert_eq(parser->ptr, expected_ptr);
+}
