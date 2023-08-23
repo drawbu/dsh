@@ -45,6 +45,7 @@
             gnumake
             valgrind
             python311Packages.compiledb
+            man-pages
           ] ++ [ cc ] ++ libs;
         };
 
