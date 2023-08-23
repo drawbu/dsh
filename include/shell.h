@@ -5,6 +5,7 @@
     #include <stdlib.h>
 
     #include "status.h"
+    #include "env.h"
 
 typedef struct {
     char *input;
@@ -14,11 +15,12 @@ typedef struct {
 typedef struct {
     bool is_running;
     input_t *input;
+    env_t *env;
 } shell_t;
 
-status_t shell_run(void);
+status_t shell_run(char **envp);
 int process_input(shell_t *shell);
 void shell_free(shell_t *shell);
-shell_t *shell_init(void);
+shell_t *shell_init(char **envp);
 
 #endif /* SHELL_H */

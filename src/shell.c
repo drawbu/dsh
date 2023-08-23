@@ -7,26 +7,47 @@
 #include "shell.h"
 #include "args.h"
 #include "status.h"
+#include "env.h"
 
-shell_t *shell_init(void)
+static
+input_t *input_init(void)
+{
+    input_t *input = malloc(sizeof(*input));
+
+    if (input == NULL)
+        return NULL;
+    *input = (input_t){
+        .input = NULL,
+        .len = 0,
+    };
+    return input;
+}
+
+static
+void input_free(input_t *input)
+{
+    if (input == NULL)
+        return;
+    if (input->input != NULL)
+        free(input->input);
+    free(input);
+}
+
+shell_t *shell_init(char **envp)
 {
     shell_t *shell = malloc(sizeof(*shell));
 
     if (shell == NULL)
         return NULL;
     *shell = (shell_t){
-        .input = NULL,
+        .input = input_init(),
+        .env = env_init(envp),
         .is_running = true,
     };
-    shell->input = malloc(sizeof(*(shell->input)));
-    if (shell->input == NULL) {
+    if (shell->input == NULL || shell->env == NULL) {
         shell_free(shell);
         return NULL;
     }
-    *shell->input = (input_t){
-        .input = NULL,
-        .len = 0,
-    };
     return shell;
 }
 
@@ -34,11 +55,8 @@ void shell_free(shell_t *shell)
 {
     if (shell == NULL)
         return;
-    if (shell->input != NULL) {
-        if (shell->input->input != NULL)
-            free(shell->input->input);
-        free(shell->input);
-    }
+    input_free(shell->input);
+    env_free(shell->env);
     free(shell);
 }
 
@@ -73,9 +91,9 @@ int shell_prompt(shell_t *shell)
     return process_input(shell);
 }
 
-status_t shell_run(void)
+status_t shell_run(char **envp)
 {
-    shell_t *shell = shell_init();
+    shell_t *shell = shell_init(envp);
 
     if (shell == NULL)
         return FAILURE;

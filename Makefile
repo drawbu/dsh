@@ -19,6 +19,7 @@ SRC := main.c
 SRC += shell.c
 SRC += args.c
 SRC += args_parser.c
+SRC += env.c
 
 SRC_DEBUG := $(SRC)
 
