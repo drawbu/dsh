@@ -1,5 +1,5 @@
-#ifndef REPL_H
-    #define REPL_H
+#ifndef SHELL_H
+    #define SHELL_H
 
     #include <stdbool.h>
     #include <stdlib.h>
@@ -16,9 +16,9 @@ typedef struct {
     input_t *input;
 } shell_t;
 
-status_t repl_run(void);
+status_t shell_run(void);
 int process_input(shell_t *shell);
 void shell_free(shell_t *shell);
 shell_t *shell_init(void);
 
-#endif /* REPL_H */
+#endif /* SHELL_H */

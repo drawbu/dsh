@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "repl.h"
+#include "shell.h"
+#include "args.h"
 #include "status.h"
 
 shell_t *shell_init(void)
@@ -53,7 +54,7 @@ int process_input(shell_t *shell)
 }
 
 static
-int repl_prompt(shell_t *shell)
+int shell_prompt(shell_t *shell)
 {
     static size_t offset = 0;
     input_t *input = shell->input;
@@ -66,17 +67,20 @@ int repl_prompt(shell_t *shell)
     }
     if (input->len > 0)
         input->input[--(input->len)] = '\0';
+    args_t *args = get_args(input->input);
+    for (uint32_t i = 0; i < args->argc; i++)
+        printf("argv[%d]: `%s`\n", i, args->argv[i]);
     return process_input(shell);
 }
 
-status_t repl_run(void)
+status_t shell_run(void)
 {
     shell_t *shell = shell_init();
 
     if (shell == NULL)
         return FAILURE;
     while (shell->is_running) {
-        repl_prompt(shell);
+        shell_prompt(shell);
     }
     shell_free(shell);
     return SUCCESS;
