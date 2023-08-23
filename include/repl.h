@@ -17,5 +17,6 @@ typedef struct {
 } shell_t;
 
 status_t repl_run(void);
+int process_input(shell_t *shell);
 
 #endif /* REPL_H */

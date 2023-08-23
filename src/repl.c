@@ -43,6 +43,19 @@ shell_t *shell_init(void)
     return shell;
 }
 
+int process_input(shell_t *shell)
+{
+    input_t *input = shell->input;
+
+    if (strcmp(input->input, "exit") == 0) {
+        shell->is_running = false;
+        return 0;
+    }
+    printf("input: '%s'\nlen:  %lu\n", input->input, input->len);
+    return 0;
+}
+
+static
 int repl_prompt(shell_t *shell)
 {
     static size_t offset = 0;
@@ -50,13 +63,13 @@ int repl_prompt(shell_t *shell)
 
     printf("> ");
     input->len = getline(&(input->input), &offset, stdin);
-    if (input->len == (size_t)-1 || strcmp(input->input, "exit\n") == 0) {
+    if (input->len == (size_t)-1) {
         shell->is_running = false;
         return 0;
     }
-    input->input[input->len - 1] = '\0';
-    printf("input: '%s'\nlen:  %lu\n", input->input, input->len);
-    return 0;
+    if (input->len > 0)
+        input->input[--(input->len)] = '\0';
+    return process_input(shell);
 }
 
 status_t repl_run(void)
