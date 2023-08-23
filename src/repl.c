@@ -8,27 +8,39 @@
 #include "status.h"
 
 static
+void shell_free(shell_t *shell)
+{
+    if (shell == NULL)
+        return;
+    if (shell->input != NULL) {
+        if (shell->input->input != NULL)
+            free(shell->input->input);
+        free(shell->input);
+    }
+    free(shell);
+}
+
+static
 shell_t *shell_init(void)
 {
     shell_t *shell = malloc(sizeof(*shell));
 
     if (shell == NULL)
         return NULL;
+    *shell = (shell_t){
+        .input = NULL,
+        .is_running = true,
+    };
     shell->input = malloc(sizeof(*(shell->input)));
     if (shell->input == NULL) {
-        free(shell);
+        shell_free(shell);
         return NULL;
     }
-    shell->is_running = true;
+    *shell->input = (input_t){
+        .input = NULL,
+        .len = 0,
+    };
     return shell;
-}
-
-static
-void shell_free(shell_t *shell)
-{
-    free(shell->input->input);
-    free(shell->input);
-    free(shell);
 }
 
 int repl_prompt(shell_t *shell)
@@ -38,7 +50,7 @@ int repl_prompt(shell_t *shell)
 
     printf("> ");
     input->len = getline(&(input->input), &offset, stdin);
-    if (input->len == (size_t)-1 || strcmp(input->input, "exit") == 0) {
+    if (input->len == (size_t)-1 || strcmp(input->input, "exit\n") == 0) {
         shell->is_running = false;
         return 0;
     }
