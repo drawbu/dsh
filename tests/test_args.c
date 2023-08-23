@@ -6,28 +6,34 @@
 #include "args.h"
 
 static
-void assert_str_arrays(args_t *expected, args_t *result)
+void assert_args(char **argv, size_t argc, char *input)
 {
+    args_t expected = {
+        .argv = argv,
+        .argc = argc,
+    };
+    args_t *result = get_args(input);
+
     if (result == NULL)
         cr_skip("args == NULL");
     cr_assert_eq(
-        expected->argc, 
+        expected.argc,
         result->argc,
         "Expected %lu arguments, but got %lu\n",
-        expected->argc, 
+        expected.argc,
         result->argc
     );
     if (result->argv == NULL)
         cr_skip("args->argv == NULL");
-    for (uint32_t i = 0; i < expected->argc; i++) {
+    for (uint32_t i = 0; i < expected.argc; i++) {
         if (result->argv == NULL)
             cr_skip("args->argv[%d] == NULL", i);
         cr_assert_str_eq(
-            expected->argv[i], 
+            expected.argv[i],
             result->argv[i],
             "For argument %d,\nexpected: '%s', \ngot:      '%s'\n",
             i,
-            expected->argv[i], 
+            expected.argv[i],
             result->argv[i]
         );
     }
@@ -35,83 +41,59 @@ void assert_str_arrays(args_t *expected, args_t *result)
 
 Test(args, hello) {
     char input[] = "hello";
+    size_t argc = 1;
     char *argv[] = {
         "hello",
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 1,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
 
 Test(args, hello_world) {
     char input[] = "hello world";
+    size_t argc = 2;
     char *argv[] = {
         "hello", "world",
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 2,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
 
 Test(args, spaces) {
     char input[] = " hello  world ";
+    size_t argc = 2;
     char *argv[] = {
         "hello", "world",
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 2,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
 
 Test(args, empty) {
     char input[] = "";
+    size_t argc = 0;
     char *argv[] = {
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 0,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
 
 Test(args, double_quotes) {
     char input[] = "echo \"hello world\"";
+    size_t argc = 2;
     char *argv[] = {
         "echo", "hello world",
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 2,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
 
 Test(args, single_quotes) {
     char input[] = "echo 'hello world'";
+    size_t argc = 2;
     char *argv[] = {
         "echo", "hello world",
     };
-    args_t expected = {
-        .argv = argv,
-        .argc = 2,
-    };
-    args_t *result = get_args(input);
 
-    assert_str_arrays(&expected, result);
+    assert_args(argv, argc, input);
 }
