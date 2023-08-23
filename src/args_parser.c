@@ -88,3 +88,8 @@ char *parser_next_token(parser_t *parser)
         return NULL;
     return token;
 }
+
+void parser_reset_ptr(parser_t *parser)
+{
+    parser->ptr = parser->input;
+}
