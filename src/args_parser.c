@@ -82,7 +82,7 @@ char *parser_next_token(parser_t *parser)
         return NULL;
     if (end == NULL)
         end = start + size;
-    parser->ptr += end - start + is_quoted;
+    parser->ptr += end - start + is_quoted + 1;
     token = create_token(start, end);
     if (token == NULL)
         return NULL;

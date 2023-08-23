@@ -52,6 +52,24 @@ Test(args_parser, single_quotes) {
     cr_assert_null(parser_next_token(parser));
 }
 
+Test(args_parser, word_after_quotes) {
+    parser_t *parser = parser_init("hello \"foo bar\" world");
+
+    cr_assert_str_eq(parser_next_token(parser), "hello");
+    cr_assert_str_eq(parser_next_token(parser), "foo bar");
+    cr_assert_str_eq(parser_next_token(parser), "world");
+    cr_assert_null(parser_next_token(parser));
+}
+
+Test(args_parser, multi_quotes) {
+    parser_t *parser = parser_init("hello \"foo bar\" \" world\"");
+
+    cr_assert_str_eq(parser_next_token(parser), "hello");
+    cr_assert_str_eq(parser_next_token(parser), "foo bar");
+    cr_assert_str_eq(parser_next_token(parser), " world");
+    cr_assert_null(parser_next_token(parser));
+}
+
 Test(args_parser, ptr_reset) {
     parser_t *parser = parser_init("foo bar");
 
