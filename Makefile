@@ -18,6 +18,7 @@ VPATH := src
 SRC := main.c
 SRC += repl.c
 SRC += args.c
+SRC += args_parser.c
 
 SRC_DEBUG := $(SRC)
 
@@ -26,6 +27,7 @@ SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
 SRC_TESTS += test_process_input.c
 SRC_TESTS += test_args.c
+SRC_TESTS += test_args_parser.c
 
 # ↓ Objects
 OBJ := $(SRC:%.c=$(BUILD_DIR)/release/%.o)
