@@ -25,6 +25,7 @@ VPATH += tests
 SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
 SRC_TESTS += test_process_input.c
+SRC_TESTS += test_args.c
 
 # ↓ Objects
 OBJ := $(SRC:%.c=$(BUILD_DIR)/release/%.o)
@@ -94,7 +95,7 @@ $(NAME_TESTS): $(OBJ_TESTS)
 	@ $(CC) -o $@ $^ $(CFLAGS) || $(DIE)
 
 run_tests: $(NAME_TESTS)
-	@ ./$(NAME_TESTS)
+	@ ./$(NAME_TESTS) --verbose
 
 # ↓ Clean rules
 clean:
