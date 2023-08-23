@@ -31,25 +31,19 @@ void shell_free(shell_t *shell)
     free(shell);
 }
 
-static
-input_t *get_prompt(input_t *input)
-{
-    static size_t offset = 0;
-
-    input->len = getline(&(input->input), &offset, stdin);
-    input->input[input->len - 1] = '\0';
-    return input;
-}
-
 int repl_prompt(shell_t *shell)
 {
-    input_t *input;
+    static size_t offset = 0;
+    input_t *input = shell->input;
 
     printf("> ");
-    input = get_prompt(shell->input);
-    printf("input: '%s'\nlen:  %lu\n", input->input, input->len);
-    if (input->len == (size_t)-1 || strcmp(input->input, "exit") == 0)
+    input->len = getline(&(input->input), &offset, stdin);
+    if (input->len == (size_t)-1 || strcmp(input->input, "exit") == 0) {
         shell->is_running = false;
+        return 0;
+    }
+    input->input[input->len - 1] = '\0';
+    printf("input: '%s'\nlen:  %lu\n", input->input, input->len);
     return 0;
 }
 
