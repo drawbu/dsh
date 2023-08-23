@@ -49,7 +49,6 @@ int process_input(shell_t *shell)
         shell->is_running = false;
         return 0;
     }
-    printf("input: '%s'\nlen:  %lu\n", input->input, input->len);
     return 0;
 }
 
