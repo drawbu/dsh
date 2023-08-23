@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "args.h"
 
@@ -53,7 +54,11 @@ char *parser_next_token(parser_t *parser)
     char *start = NULL;
     char *end = NULL;
     char *token = NULL;
+    bool is_quoted = false;
+    size_t size = 0;
 
+    if (parser == NULL)
+        return NULL;
     skip_whitespaces(parser);
     start = parser->ptr;
     end = parser->ptr;
@@ -62,19 +67,24 @@ char *parser_next_token(parser_t *parser)
             return NULL;
         case '"':
             end = strpbrk(++start, "\"");
+            is_quoted = true;
             break;
         case '\'':
             end = strpbrk(++start, "'");
+            is_quoted = true;
             break;
         default:
             end = strpbrk(start, " ");
-            if (end == NULL)
-                end = start + strlen(start);
             break;
     }
+    size = strlen(start);
+    if (size == 0)
+        return NULL;
+    if (end == NULL)
+        end = start + size;
+    parser->ptr += end - start + is_quoted;
     token = create_token(start, end);
     if (token == NULL)
         return NULL;
-    parser->ptr += strlen(token);
     return token;
 }

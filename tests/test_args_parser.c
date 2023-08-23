@@ -41,6 +41,7 @@ Test(args_parser, dual_quotes) {
 
     cr_assert_str_eq(parser_next_token(parser), "hello");
     cr_assert_str_eq(parser_next_token(parser), "foo bar");
+    cr_assert_null(parser_next_token(parser));
 }
 
 Test(args_parser, single_quotes) {
@@ -48,4 +49,5 @@ Test(args_parser, single_quotes) {
 
     cr_assert_str_eq(parser_next_token(parser), "hello");
     cr_assert_str_eq(parser_next_token(parser), "foo bar");
+    cr_assert_null(parser_next_token(parser));
 }
