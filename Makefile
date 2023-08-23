@@ -77,6 +77,7 @@ $(BUILD_DIR)/debug/%.o: %.c
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
 $(NAME_DEBUG): CFLAGS += -fsanitize=address,leak,undefined
+$(NAME_TESTS): CFLAGS += -D DEBUG_MODE
 $(NAME_DEBUG): $(OBJ_DEBUG)
 	@ $(ECHO) "[$(C_RED)$(C_BOLD)CC$(C_RESET)] $(C_PURPLE)$@$(C_RESET)"
 	@ $(CC) -o $@ $^ $(CFLAGS) || $(DIE)
