@@ -17,6 +17,7 @@ BUILD_DIR := .build
 VPATH := src
 SRC := main.c
 SRC += repl.c
+SRC += args.c
 
 SRC_DEBUG := $(SRC)
 
