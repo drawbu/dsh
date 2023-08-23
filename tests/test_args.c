@@ -9,7 +9,7 @@ static
 void assert_str_arrays(args_t *expected, args_t *result)
 {
     if (result == NULL)
-        cr_skip("NULL pointer");
+        cr_skip("args == NULL");
     cr_assert_eq(
         expected->argc, 
         result->argc,
@@ -17,7 +17,11 @@ void assert_str_arrays(args_t *expected, args_t *result)
         expected->argc, 
         result->argc
     );
-    for (uint32_t i = 0; i < expected->argc; i++)
+    if (result->argv == NULL)
+        cr_skip("args->argv == NULL");
+    for (uint32_t i = 0; i < expected->argc; i++) {
+        if (result->argv == NULL)
+            cr_skip("args->argv[%d] == NULL", i);
         cr_assert_str_eq(
             expected->argv[i], 
             result->argv[i],
@@ -26,6 +30,7 @@ void assert_str_arrays(args_t *expected, args_t *result)
             expected->argv[i], 
             result->argv[i]
         );
+    }
 }
 
 Test(args, hello) {

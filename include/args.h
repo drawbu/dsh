@@ -14,6 +14,8 @@ typedef struct {
 } parser_t;
 
 args_t *get_args(char *input);
+void args_free(args_t *args);
+args_t *args_init(void);
 parser_t *parser_init(char *input);
 void parser_free(parser_t *parser);
 char *parser_next_token(parser_t *parser);
