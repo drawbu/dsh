@@ -97,7 +97,7 @@ clean:
 
 fclean:
 	$(RM) -r $(BUILD_DIR)
-	$(RM) $(NAME) $(NAME_DEBUG)
+	$(RM) $(NAME) $(NAME_DEBUG) $(NAME_TESTS)
 
 .PHONY: clean fclean
 
