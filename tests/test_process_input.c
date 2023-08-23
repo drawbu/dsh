@@ -3,12 +3,13 @@
 
 #include <criterion/criterion.h>
 
-#include "repl.h"
+#include "shell.h"
 
 static
 shell_t *fake_input(char *input)
 {
-    shell_t *shell = shell_init();
+    char *env[] = {NULL};
+    shell_t *shell = shell_init(env);
 
     shell->input = malloc(sizeof(*shell->input));
     shell->is_running = true;
