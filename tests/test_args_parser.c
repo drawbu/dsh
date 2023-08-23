@@ -70,6 +70,15 @@ Test(args_parser, multi_quotes) {
     cr_assert_null(parser_next_token(parser));
 }
 
+Test(args_parser, trailing_quotes) {
+    parser_t *parser = parser_init("echo \"foo bar\" world\" aaa\"a\"ah");
+
+    cr_assert_str_eq(parser_next_token(parser), "echo");
+    cr_assert_str_eq(parser_next_token(parser), "foo bar");
+    cr_assert_str_eq(parser_next_token(parser), "world\"");
+    cr_assert_str_eq(parser_next_token(parser), "aaa\"a\"ah");
+}
+
 Test(args_parser, ptr_reset) {
     parser_t *parser = parser_init("foo bar");
 
