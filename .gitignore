@@ -1,0 +1,8 @@
+# Binaries
+dsh
+debug
+test
+
+# Build
+.build
+result
