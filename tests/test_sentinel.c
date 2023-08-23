@@ -2,6 +2,6 @@
 
 #include <criterion/criterion.h>
 
-Test(test_suite_name, test_name) {
+Test(sentinel, assert_true) {
     cr_assert(true);
 }
