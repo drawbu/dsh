@@ -64,13 +64,10 @@ void shell_free(shell_t *shell)
 static DEBUG_USED
 void debug_shell(input_t *input DEBUG_USED, args_t *args DEBUG_USED)
 {
-    DEBUG(
-        "input: `%s`\nlen:   %lu\n",
-        input->input,
-        input->len
-    );
+    DEBUG("input text: `%s`", input->input);
+    DEBUG("input len:  %lu", input->len);
     for (uint32_t i = 0; i < args->argc; i++)
-        DEBUG("argv[%d]: `%s`\n", i, args->argv[i]);
+        DEBUG("argv[%d]: `%s`", i, args->argv[i]);
 }
 
 int process_input(shell_t *shell)
