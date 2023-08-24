@@ -21,8 +21,11 @@ typedef struct {
 } shell_t;
 
 status_t shell_run(char **envp);
-int process_input(shell_t *shell);
 void shell_free(shell_t *shell);
 shell_t *shell_init(char **envp);
+int process_input(shell_t *shell);
+void set_input(shell_t *shell, char *input, size_t len);
+void input_free(input_t *input);
+input_t *input_init(void);
 
 #endif /* SHELL_H */

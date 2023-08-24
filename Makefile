@@ -16,8 +16,10 @@ BUILD_DIR := .build
 # ↓ Sources
 VPATH := src
 VPATH += src/args
+VPATH += src/shell
 SRC := main.c
 SRC += shell.c
+SRC += shell_input.c
 SRC += args.c
 SRC += args_parser.c
 SRC += env.c
