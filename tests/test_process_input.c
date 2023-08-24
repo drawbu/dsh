@@ -4,6 +4,7 @@
 #include <criterion/criterion.h>
 
 #include "shell.h"
+#include "args.h"
 
 static
 shell_t *fake_input(char *input)
@@ -16,6 +17,7 @@ shell_t *fake_input(char *input)
     *shell->input = (input_t){
         .input = strdup(input),
         .len = strlen(input),
+        .args = get_args(input),
     };
     process_input(shell);
     return shell;

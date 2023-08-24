@@ -4,12 +4,14 @@
     #include <stdbool.h>
     #include <stdlib.h>
 
+    #include "args.h"
     #include "status.h"
     #include "env.h"
 
 typedef struct {
     char *input;
     size_t len;
+    args_t *args;
 } input_t;
 
 typedef struct {
