@@ -76,10 +76,9 @@ int process_input(shell_t *shell)
     args_t *args = get_args(input->input);
 
     debug_shell(input, args);
-    if (strcmp(input->input, "exit") == 0) {
+    if (strcmp(args->argv[0], "exit") == 0)
         shell->is_running = false;
-        return 0;
-    }
+    args_free(args);
     return 0;
 }
 

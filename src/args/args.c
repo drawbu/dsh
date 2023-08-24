@@ -41,7 +41,7 @@ uint32_t get_argc(parser_t *parser)
     do {
         size++;
         token = parser_next_token(parser);
-        if (token == NULL)
+        if (token != NULL)
             free(token);
     } while (token != NULL);
     parser_reset_ptr(parser);
@@ -76,5 +76,6 @@ args_t *get_args(char *input)
         return NULL;
     }
     set_argv(parser, args);
+    parser_free(parser);
     return args;
 }
