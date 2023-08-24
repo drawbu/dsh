@@ -104,6 +104,13 @@ $(NAME_TESTS): $(OBJ_TESTS)
 run_tests: $(NAME_TESTS)
 	@ ./$(NAME_TESTS) --verbose
 
+.PHONY: run_tests
+
+run_commands: $(NAME_DEBUG)
+	@ cat tests/inputs/commands/dict.txt | ./$(NAME_DEBUG)
+
+.PHONY: run_commands
+
 # ↓ Clean rules
 clean:
 	$(RM) -r $(BUILD_DIR)
