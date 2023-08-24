@@ -28,7 +28,7 @@ void input_free(input_t *input)
     free(input);
 }
 
-void set_input(shell_t *shell, char *input, size_t len)
+void input_set(shell_t *shell, char *input, size_t len)
 {
     input_t *in = shell->input;
     args_t *args = in->args;
@@ -44,10 +44,10 @@ void set_input(shell_t *shell, char *input, size_t len)
     };
     if (in->len > 0 && in->input[in->len - 1] == '\n')
         in->input[--(in->len)] = '\0';
-    in->args = get_args(input);
+    in->args = args_get(input);
 }
 
-int process_input(shell_t *shell)
+int input_process(shell_t *shell)
 {
     input_t *input = shell->input;
     args_t *args = input->args;

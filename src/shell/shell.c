@@ -63,9 +63,9 @@ int shell_prompt(shell_t *shell)
         shell->is_running = false;
         return 0;
     }
-    set_input(shell, input, len);
+    input_set(shell, input, len);
     debug_shell(shell);
-    return process_input(shell);
+    return input_process(shell);
 }
 
 status_t shell_run(char **envp)

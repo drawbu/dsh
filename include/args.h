@@ -13,7 +13,7 @@ typedef struct {
     char *ptr;
 } parser_t;
 
-args_t *get_args(char *input);
+args_t *args_get(char *input);
 void args_free(args_t *args);
 parser_t *parser_init(char *input);
 void parser_free(parser_t *parser);

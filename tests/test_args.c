@@ -12,7 +12,7 @@ void assert_args(char **argv, size_t argc, char *input)
         .argv = argv,
         .argc = argc,
     };
-    args_t *result = get_args(input);
+    args_t *result = args_get(input);
 
     if (result == NULL)
         cr_skip("args == NULL");

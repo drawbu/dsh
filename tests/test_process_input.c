@@ -17,9 +17,9 @@ shell_t *fake_input(char *input)
     *shell->input = (input_t){
         .input = strdup(input),
         .len = strlen(input),
-        .args = get_args(input),
+        .args = args_get(input),
     };
-    process_input(shell);
+    input_process(shell);
     return shell;
 }
 

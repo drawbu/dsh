@@ -60,7 +60,7 @@ void set_argv(parser_t *parser, args_t *args)
         args->argv[i] = parser_next_token(parser);
 }
 
-args_t *get_args(char *input)
+args_t *args_get(char *input)
 {
     args_t *args = NULL;
     parser_t *parser = NULL;
