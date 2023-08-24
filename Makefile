@@ -6,6 +6,7 @@ CFLAGS += -iquote ./include
 NAME := dsh
 NAME_DEBUG := debug
 NAME_TESTS := test
+NAME_AFL := afl_dsh
 
 ifneq ($(shell find . -name ".fast"),)
 	MAKEFLAGS += -j
@@ -37,6 +38,7 @@ SRC_TESTS += test_args_parser.c
 OBJ := $(SRC:%.c=$(BUILD_DIR)/release/%.o)
 OBJ_DEBUG := $(SRC_DEBUG:%.c=$(BUILD_DIR)/debug/%.o)
 OBJ_TESTS := $(SRC_TESTS:%.c=$(BUILD_DIR)/tests/%.o)
+OBJ_AFL := $(SRC:%.c=$(BUILD_DIR)/afl/%.o)
 
 # ↓ Dependencies for headers
 DEPS_FLAGS := -MMD -MP
@@ -111,13 +113,36 @@ run_commands: $(NAME_DEBUG)
 
 .PHONY: run_commands
 
+# ↓ Compiling afl
+$(BUILD_DIR)/afl/%.o: %.c
+	@ mkdir -p $(dir $@)
+	@ $(ECHO) "[$(C_RED)$(C_BOLD)CC$(C_RESET)] $(C_GREEN)$^$(C_RESET)"
+	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
+
+$(NAME_AFL): CC := afl-gcc
+$(NAME_AFL): CFLAGS += -g3 -march=native -fsanitize=address
+$(NAME_AFL): CFLAGS += -iquote tests/include
+$(NAME_AFL): $(OBJ_AFL)
+	@ AFL_USE_ASAN=1 $(CC) $(CFLAGS) -o $@ $^
+	@ $(ECHO) "[$(C_RED)$(C_BOLD)AFL$(C_RESET)] $(C_GREEN)$^$(C_RESET)"
+
+afl_run: $(NAME_AFL)
+	@ $(RM) -r tests/generated
+	@ afl-fuzz \
+		-o tests/generated           \
+		-m none                      \
+		-i tests/inputs/commands     \
+		-x tests/inputs/tokens       \
+		-- ./$(NAME_AFL)
+
 # ↓ Clean rules
 clean:
 	$(RM) -r $(BUILD_DIR)
 
 fclean:
 	$(RM) -r $(BUILD_DIR)
-	$(RM) $(NAME) $(NAME_DEBUG) $(NAME_TESTS)
+	$(RM) -r tests/generated
+	$(RM) $(NAME) $(NAME_DEBUG) $(NAME_TESTS) $(NAME_AFL)
 
 .PHONY: clean fclean
 

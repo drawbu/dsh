@@ -46,6 +46,7 @@
             valgrind
             python311Packages.compiledb
             man-pages
+            aflplusplus
           ] ++ [ cc ] ++ libs;
         };
 

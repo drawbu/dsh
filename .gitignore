@@ -2,8 +2,10 @@
 dsh
 debug
 test
+afl_dsh
 
 # Build
 compile_commands.json
 .build
 result
+tests/generated

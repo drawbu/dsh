@@ -13,7 +13,7 @@ tab_width = 4
 indent_style = tab
 
 [{*.nix, *.yml}]
-tab_width = 2[*.txt]
+tab_width = 2
 
 [*.txt]
 insert_final_newline = false
