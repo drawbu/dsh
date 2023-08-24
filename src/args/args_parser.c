@@ -35,6 +35,8 @@ void parser_free(parser_t *parser)
 static
 void skip_whitespaces(parser_t *parser)
 {
+    if (*(parser->ptr) == '\0')
+        return;
     while (*(parser->ptr) == ' ')
         (parser->ptr)++;
 }
@@ -82,7 +84,7 @@ char *parser_next_token(parser_t *parser)
         return NULL;
     if (end == NULL)
         end = start + size;
-    parser->ptr += end - start + is_quoted + 1;
+    parser->ptr += end - start + is_quoted * 2;
     token = create_token(start, end);
     if (token == NULL)
         return NULL;
