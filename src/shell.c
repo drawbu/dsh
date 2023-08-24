@@ -95,7 +95,7 @@ int shell_prompt(shell_t *shell)
         shell->is_running = false;
         return 0;
     }
-    if (input->len > 0)
+    if (input->len > 0 && input->input[input->len - 1] == '\n')
         input->input[--(input->len)] = '\0';
     return process_input(shell);
 }
