@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 #include "env.h"
+#include "debug.h"
 
 static
 uint32_t get_envp_size(char **envp)
@@ -24,6 +26,7 @@ env_t *env_init(char **envp)
         .variables = envp,
         .size = get_envp_size(envp),
     };
+    DEBUG("Loaded %u environment variables", env->size);
     return env;
 }
 

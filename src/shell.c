@@ -8,6 +8,7 @@
 #include "args.h"
 #include "status.h"
 #include "env.h"
+#include "debug.h"
 
 static
 input_t *input_init(void)
@@ -60,10 +61,24 @@ void shell_free(shell_t *shell)
     free(shell);
 }
 
+static DEBUG_USED
+void debug_shell(input_t *input DEBUG_USED, args_t *args DEBUG_USED)
+{
+    DEBUG(
+        "input: `%s`\nlen:   %lu\n",
+        input->input,
+        input->len
+    );
+    for (uint32_t i = 0; i < args->argc; i++)
+        DEBUG("argv[%d]: `%s`\n", i, args->argv[i]);
+}
+
 int process_input(shell_t *shell)
 {
     input_t *input = shell->input;
+    args_t *args = get_args(input->input);
 
+    debug_shell(input, args);
     if (strcmp(input->input, "exit") == 0) {
         shell->is_running = false;
         return 0;
@@ -85,9 +100,6 @@ int shell_prompt(shell_t *shell)
     }
     if (input->len > 0)
         input->input[--(input->len)] = '\0';
-    args_t *args = get_args(input->input);
-    for (uint32_t i = 0; i < args->argc; i++)
-        printf("argv[%d]: `%s`\n", i, args->argv[i]);
     return process_input(shell);
 }
 
