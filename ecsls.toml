@@ -1,4 +1,3 @@
 [reports]
-ignore = [ "C-G1", "C-F4", "C-C1" ]
+ignore = [ "C-G1", "C-F4", "C-C1", "C-L6" ]
 merge = "multiplier"
-
