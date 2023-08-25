@@ -37,6 +37,7 @@ void assert_args(char **argv, size_t argc, char *input)
             result->argv[i]
         );
     }
+    args_free(result);
 }
 
 Test(args, hello) {
