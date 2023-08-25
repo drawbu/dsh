@@ -12,7 +12,6 @@ shell_t *fake_input(char *input)
     char *env[] = {NULL};
     shell_t *shell = shell_init(env);
 
-    shell->input = malloc(sizeof(*shell->input));
     shell->is_running = true;
     *shell->input = (input_t){
         .input = strdup(input),
