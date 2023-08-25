@@ -55,6 +55,7 @@
           default = mkCApp pname;
           debug = mkCApp "debug";
           test = mkCApp "test";
+          test_angry = mkCApp "test_angry";
         };
       });
 }

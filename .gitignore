@@ -2,6 +2,7 @@
 dsh
 debug
 test
+test_angry
 afl_dsh
 
 # Build

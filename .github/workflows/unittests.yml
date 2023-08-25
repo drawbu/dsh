@@ -21,3 +21,6 @@ jobs:
 
       - name: Run the unittests
         run: nix run .#test
+
+      - name: Run the unittests with Asan
+        run: nix run .#test_angry
