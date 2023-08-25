@@ -116,3 +116,10 @@ Test(args_parser, always_empty) {
     cr_assert_eq(parser->ptr, expected_ptr);
     parser_free(parser);
 }
+
+Test(args_parser, unterminated_quotes) {
+    char *input = "\"";
+    char *expected[] = {"\"", NULL};
+
+    assert_tokens(input, expected, 1);
+}

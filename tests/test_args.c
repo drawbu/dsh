@@ -98,3 +98,13 @@ Test(args, single_quotes) {
 
     assert_args(argv, argc, input);
 }
+
+Test(args, unterminated_quote) {
+    char input[] = "\"";
+    size_t argc = 1;
+    char *argv[] = {
+        "\"",
+    };
+
+    assert_args(argv, argc, input);
+}

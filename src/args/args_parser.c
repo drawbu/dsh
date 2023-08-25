@@ -55,7 +55,6 @@ char *parser_next_token(parser_t *parser)
 {
     char *start = NULL;
     char *end = NULL;
-    char *token = NULL;
     bool is_quoted = false;
     size_t size = 0;
 
@@ -68,11 +67,17 @@ char *parser_next_token(parser_t *parser)
         case '\0':
             return NULL;
         case '"':
-            end = strpbrk(++start, "\"");
+            end = strpbrk(start + 1, "\"");
+            if (end == NULL)
+                break;
+            start++;
             is_quoted = true;
             break;
         case '\'':
-            end = strpbrk(++start, "'");
+            end = strpbrk(start + 1, "'");
+            if (end == NULL)
+                break;
+            start++;
             is_quoted = true;
             break;
         default:
@@ -85,10 +90,7 @@ char *parser_next_token(parser_t *parser)
     if (end == NULL)
         end = start + size;
     parser->ptr += end - start + is_quoted * 2;
-    token = create_token(start, end);
-    if (token == NULL)
-        return NULL;
-    return token;
+    return create_token(start, end);
 }
 
 void parser_reset_ptr(parser_t *parser)
