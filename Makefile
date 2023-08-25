@@ -2,6 +2,7 @@ CC := gcc -std=gnu11
 CFLAGS := -W -Wall -Wextra
 CFLAGS += -U_FORTIFY_SOURCE
 CFLAGS += -iquote ./include
+ASAN_FLAGS := -fsanitize=address,leak,undefined -g3
 
 NAME := dsh
 NAME_DEBUG := debug
@@ -81,7 +82,7 @@ $(BUILD_DIR)/debug/%.o: %.c
 	@ $(ECHO) "[$(C_RED)$(C_BOLD)CC$(C_RESET)] $(C_GREEN)$^$(C_RESET)"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
-$(NAME_DEBUG): CFLAGS += -fsanitize=address,leak,undefined -g3
+$(NAME_DEBUG): CFLAGS += $(ASAN_FLAGS)
 $(NAME_DEBUG): CFLAGS += -D DEBUG_MODE
 $(NAME_DEBUG): $(OBJ_DEBUG)
 	@ $(ECHO) "[$(C_RED)$(C_BOLD)CC$(C_RESET)] $(C_PURPLE)$@$(C_RESET)"
@@ -97,6 +98,7 @@ ifneq ($(NO_COV),1)
 $(NAME_TESTS): CFLAGS += -g3 --coverage
 $(NAME_TESTS): CFLAGS += -fprofile-arcs -ftest-coverage
 endif
+$(NAME_TESTS): CFLAGS += $(ASAN_FLAGS)
 $(NAME_TESTS): CFLAGS += -D TEST_MODE
 $(NAME_TESTS): CFLAGS += -lcriterion
 $(NAME_TESTS): $(OBJ_TESTS)
