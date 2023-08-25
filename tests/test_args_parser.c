@@ -1,98 +1,118 @@
+#include <stdint.h>
+
 #include <criterion/criterion.h>
 
 #include "args.h"
 
-Test(args_parser, single_token) {
-    parser_t *parser = parser_init("foo");
+static
+void assert_next_token(parser_t *parser, char *expected)
+{
+    char *token = parser_next_token(parser);
 
-    cr_assert_str_eq(parser_next_token(parser), "foo");
+    if (expected != NULL)
+        cr_assert_str_eq(token, expected);
+    else
+        cr_assert_null(token);
+    if (token != NULL)
+        free(token);
+}
+
+static
+void assert_tokens(char *input, char **expected, uint32_t size)
+{
+    parser_t *parser = parser_init(input);
+
+    for (uint32_t i = 0; i < size; i++)
+        assert_next_token(parser, expected[i]);
+    parser_free(parser);
+}
+
+Test(args_parser, single_token) {
+    char *input = "foo";
+    char *expected[] = {"foo"};
+
+    assert_tokens(input, expected, 1);
 }
 
 Test(args_parser, multi_tokens) {
-    parser_t *parser = parser_init("foo bar");
+    char *input = "foo bar";
+    char *expected[] = {"foo", "bar"};
 
-    cr_assert_str_eq(parser_next_token(parser), "foo");
-    cr_assert_str_eq(parser_next_token(parser), "bar");
+    assert_tokens(input, expected, 2);
 }
 
 Test(args_parser, spaces) {
-    parser_t *parser = parser_init("   foo  bar  ");
+    char *input = "   foo  bar  ";
+    char *expected[] = {"foo", "bar"};
 
-    cr_assert_str_eq(parser_next_token(parser), "foo");
-    cr_assert_str_eq(parser_next_token(parser), "bar");
+    assert_tokens(input, expected, 2);
 }
 
 Test(args_parser, spaces_ending) {
-    parser_t *parser = parser_init("   foo  bar  ");
+    char *input = "   foo  bar  ";
+    char *expected[] = {"foo", "bar", NULL};
 
-    cr_assert_str_eq(parser_next_token(parser), "foo");
-    cr_assert_str_eq(parser_next_token(parser), "bar");
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 3);
 }
 
 Test(args_parser, empty) {
-    parser_t *parser = parser_init("");
+    char *input = "";
+    char *expected[] = {NULL};
 
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 1);
 }
 
 Test(args_parser, dual_quotes) {
-    parser_t *parser = parser_init("hello \"foo bar\"");
+    char *input = "hello \"foo bar\"";
+    char *expected[] = {"hello", "foo bar", NULL};
 
-    cr_assert_str_eq(parser_next_token(parser), "hello");
-    cr_assert_str_eq(parser_next_token(parser), "foo bar");
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 3);
 }
 
 Test(args_parser, single_quotes) {
-    parser_t *parser = parser_init("hello 'foo bar'");
+    char *input = "hello 'foo bar'";
+    char *expected[] = {"hello", "foo bar", NULL};
 
-    cr_assert_str_eq(parser_next_token(parser), "hello");
-    cr_assert_str_eq(parser_next_token(parser), "foo bar");
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 3);
 }
 
 Test(args_parser, word_after_quotes) {
-    parser_t *parser = parser_init("hello \"foo bar\" world");
+    char *input = "hello \"foo bar\" world";
+    char *expected[] = {"hello", "foo bar", "world", NULL};
 
-    cr_assert_str_eq(parser_next_token(parser), "hello");
-    cr_assert_str_eq(parser_next_token(parser), "foo bar");
-    cr_assert_str_eq(parser_next_token(parser), "world");
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 4);
 }
 
 Test(args_parser, multi_quotes) {
-    parser_t *parser = parser_init("hello \"foo bar\" \" world\"");
+    char *input = "hello \"foo bar\" \" world\"";
+    char *expected[] = {"hello", "foo bar", " world", NULL};
 
-    cr_assert_str_eq(parser_next_token(parser), "hello");
-    cr_assert_str_eq(parser_next_token(parser), "foo bar");
-    cr_assert_str_eq(parser_next_token(parser), " world");
-    cr_assert_null(parser_next_token(parser));
+    assert_tokens(input, expected, 4);
 }
 
 Test(args_parser, trailing_quotes) {
-    parser_t *parser = parser_init("echo \"foo bar\" world\" aaa\"a\"ah");
+    char *input = "echo \"foo bar\" world\" aaa\"a\"ah";
+    char *expected[] = {"echo", "foo bar", "world\"", "aaa\"a\"ah"};
 
-    cr_assert_str_eq(parser_next_token(parser), "echo");
-    cr_assert_str_eq(parser_next_token(parser), "foo bar");
-    cr_assert_str_eq(parser_next_token(parser), "world\"");
-    cr_assert_str_eq(parser_next_token(parser), "aaa\"a\"ah");
+    assert_tokens(input, expected, 4);
 }
 
 Test(args_parser, ptr_reset) {
     parser_t *parser = parser_init("foo bar");
 
-    cr_assert_str_eq(parser_next_token(parser), "foo");
+    assert_next_token(parser, "foo");
     parser_reset_ptr(parser);
-    cr_assert_str_eq(parser_next_token(parser), "foo");
+    assert_next_token(parser, "foo");
+    parser_free(parser);
 }
 
 Test(args_parser, always_empty) {
     parser_t *parser = parser_init("");
     char *expected_ptr = parser->ptr;
 
-    cr_assert_null(parser_next_token(parser));
+    assert_next_token(parser, NULL);
     cr_assert_eq(parser->ptr, expected_ptr);
-    cr_assert_null(parser_next_token(parser));
+    assert_next_token(parser, NULL);
     cr_assert_eq(parser->ptr, expected_ptr);
+    parser_free(parser);
 }
