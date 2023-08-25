@@ -51,7 +51,13 @@ uint32_t get_argc(parser_t *parser)
 static
 void set_argv(parser_t *parser, args_t *args)
 {
+    *args = (args_t){
+        .argc = 0,
+        .argv = NULL,
+    };
     args->argc = get_argc(parser);
+    if (args->argc == 0)
+        return;
     args->argv = malloc(sizeof(*(args->argv)) * args->argc);
     if (args->argv == NULL)
         return;

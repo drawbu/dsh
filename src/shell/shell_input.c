@@ -52,6 +52,8 @@ int input_process(shell_t *shell)
     input_t *input = shell->input;
     args_t *args = input->args;
 
+    if (args->argv == NULL || args->argc == 0)
+        return 0;
     if (strcmp(args->argv[0], "exit") == 0)
         shell->is_running = false;
     return 0;
