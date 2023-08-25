@@ -9,4 +9,7 @@ afl_dsh
 compile_commands.json
 .build
 result
+
+# Crashes reports
 tests/generated
+core.*
