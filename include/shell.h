@@ -27,5 +27,6 @@ int input_process(shell_t *shell);
 void input_set(shell_t *shell, char *input, size_t len);
 void input_free(input_t *input);
 input_t *input_init(void);
+void show_prompt(shell_t *shell);
 
 #endif /* SHELL_H */

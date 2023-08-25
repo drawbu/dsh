@@ -1,6 +1,5 @@
 #include <stddef.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -57,7 +56,7 @@ int shell_prompt(shell_t *shell)
     size_t len = 0;
     char *input = NULL;
 
-    printf("> ");
+    show_prompt(shell);
     len = getline(&input, &offset, stdin);
     if (len == (size_t)-1) {
         free(input);
