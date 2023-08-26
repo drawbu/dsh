@@ -57,7 +57,7 @@ int shell_prompt(shell_t *shell)
     size_t len = 0;
     char *input = NULL;
 
-    show_prompt(shell);
+    show_prompt();
     len = getline(&input, &offset, stdin);
     if (len == (size_t)-1) {
         free(input);

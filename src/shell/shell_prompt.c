@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "shell.h"
 
-void show_prompt(shell_t *shell)
+void show_prompt(void)
 {
-    printf("%s@%s:%s > ", getenv("USER"), getenv("HOST"), getenv("PWD"));
+    char host[64];
+
+    gethostname(host, 64);
+    printf("%s@%s:%s > ", getenv("USER"), host, getenv("PWD"));
 }
