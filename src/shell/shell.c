@@ -61,7 +61,9 @@ void shell_prompt(shell_t *shell)
     len = getline(&input, &offset, stdin);
     if (len == (size_t)-1) {
         free(input);
-        builtin_exit(shell, NULL);
+        args_free(shell->input->args);
+        shell->input->args = NULL;
+        builtin_exit(shell);
         return;
     }
     input_set(shell, input, len);

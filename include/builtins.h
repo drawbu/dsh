@@ -8,11 +8,11 @@
 
     #define BUILTINS_COUNT ((uint32_t)1)
 
-int builtin_exit(shell_t *shell,args_t *args);
+int builtin_exit(shell_t *shell);
 
 typedef struct {
     const char *name;
-    int (* func)(shell_t *, args_t *);
+    int (* func)(shell_t *);
 } builtin_t;
 
 static
