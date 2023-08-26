@@ -51,7 +51,7 @@ void debug_shell(shell_t *shell)
 }
 
 static
-int shell_prompt(shell_t *shell)
+void shell_prompt(shell_t *shell)
 {
     static size_t offset = 0;
     size_t len = 0;
@@ -61,11 +61,13 @@ int shell_prompt(shell_t *shell)
     len = getline(&input, &offset, stdin);
     if (len == (size_t)-1) {
         free(input);
-        return builtin_exit(shell, NULL);
+        builtin_exit(shell, NULL);
+        return;
     }
     input_set(shell, input, len);
     debug_shell(shell);
-    return input_process(shell);
+    execute_cmd(shell);
+    return;
 }
 
 status_t shell_run(char **envp)

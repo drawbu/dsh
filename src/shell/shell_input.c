@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 
 #include "shell.h"
 #include "args.h"
@@ -47,16 +46,4 @@ void input_set(shell_t *shell, char *input, size_t len)
     if (in->len > 0 && in->input[in->len - 1] == '\n')
         in->input[--(in->len)] = '\0';
     in->args = args_get(input);
-}
-
-int input_process(shell_t *shell)
-{
-    input_t *input = shell->input;
-    args_t *args = input->args;
-
-    if (args->argv == NULL || args->argc == 0)
-        return EXIT_FAILURE;
-    if (strcmp(args->argv[0], "exit") == 0)
-        return builtin_exit(shell, args);
-    return EXIT_SUCCESS;
 }

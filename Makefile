@@ -27,6 +27,7 @@ BUILD_DIR := .build
 VPATH := src
 SRC := main.c
 SRC += env.c
+SRC += commands.c
 
 VPATH += src/shell
 SRC += shell.c
