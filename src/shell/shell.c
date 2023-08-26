@@ -8,6 +8,7 @@
 #include "status.h"
 #include "env.h"
 #include "debug.h"
+#include "builtins.h"
 
 shell_t *shell_init(char **envp)
 {
@@ -60,8 +61,7 @@ int shell_prompt(shell_t *shell)
     len = getline(&input, &offset, stdin);
     if (len == (size_t)-1) {
         free(input);
-        shell->is_running = false;
-        return 0;
+        return builtin_exit(shell, NULL);
     }
     input_set(shell, input, len);
     debug_shell(shell);

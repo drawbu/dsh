@@ -2,6 +2,7 @@
 
 #include "shell.h"
 #include "args.h"
+#include "builtins.h"
 
 input_t *input_init(void)
 {
@@ -55,6 +56,6 @@ int input_process(shell_t *shell)
     if (args->argv == NULL || args->argc == 0)
         return 0;
     if (strcmp(args->argv[0], "exit") == 0)
-        shell->is_running = false;
+        return builtin_exit(shell, args);
     return 0;
 }
