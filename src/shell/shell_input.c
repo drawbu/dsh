@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include "shell.h"
@@ -54,8 +55,8 @@ int input_process(shell_t *shell)
     args_t *args = input->args;
 
     if (args->argv == NULL || args->argc == 0)
-        return 0;
+        return EXIT_FAILURE;
     if (strcmp(args->argv[0], "exit") == 0)
         return builtin_exit(shell, args);
-    return 0;
+    return EXIT_SUCCESS;
 }
