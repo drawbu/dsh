@@ -25,16 +25,19 @@ BUILD_DIR := .build
 
 # ↓ Sources
 VPATH := src
-VPATH += src/shell
-VPATH += src/args
-VPATH += src/builtins
 SRC := main.c
 SRC += env.c
+
+VPATH += src/shell
 SRC += shell.c
 SRC += shell_input.c
 SRC += shell_prompt.c
+
+VPATH += src/args
 SRC += args.c
 SRC += args_parser.c
+
+VPATH += src/builtins
 SRC += exit.c
 
 SRC_DEBUG := $(SRC)
