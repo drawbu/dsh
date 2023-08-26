@@ -45,7 +45,7 @@ void debug_shell(shell_t *shell)
 
     DEBUG("input text: `%s`", in->input);
     DEBUG("input len:  %lu", in->len);
-    if (args != NULL && args->argc == 0)
+    if (args != NULL)
         for (uint32_t i = 0; i < args->argc; i++)
             DEBUG("argv[%d]: `%s`", i, args->argv[i]);
 }
