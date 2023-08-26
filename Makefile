@@ -46,7 +46,7 @@ SRC_DEBUG := $(SRC)
 VPATH += tests
 SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
-SRC_TESTS += test_process_input.c
+SRC_TESTS += test_cmd.c
 SRC_TESTS += test_args.c
 SRC_TESTS += test_args_parser.c
 
