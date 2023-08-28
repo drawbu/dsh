@@ -42,14 +42,20 @@ VPATH += src/builtins
 SRC += exit.c
 SRC += echo.c
 
+# ↓ Sources to add in debug mode
 SRC_DEBUG := $(SRC)
 
+# ↓ Sources to add in test mode
 VPATH += tests
 SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
-SRC_TESTS += test_cmd_builtins.c
 SRC_TESTS += test_args.c
 SRC_TESTS += test_args_parser.c
+
+VPATH += tests/cmd
+SRC_TESTS += test_builtin_exit.c
+SRC_TESTS += test_builtin_echo.c
+SRC_TESTS += test_not_found.c
 
 # ↓ Objects
 OBJ := $(SRC:%.c=$(BUILD_DIR)/release/%.o)

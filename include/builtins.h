@@ -13,7 +13,7 @@ int builtin_echo(shell_t *shell);
 
 typedef struct {
     const char *name;
-    int (* func)(shell_t *);
+    int (*func)(shell_t *);
 } builtin_t;
 
 static
