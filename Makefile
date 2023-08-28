@@ -40,13 +40,14 @@ SRC += args_parser.c
 
 VPATH += src/builtins
 SRC += exit.c
+SRC += echo.c
 
 SRC_DEBUG := $(SRC)
 
 VPATH += tests
 SRC_TESTS := $(SRC)
 SRC_TESTS += test_sentinel.c
-SRC_TESTS += test_cmd.c
+SRC_TESTS += test_cmd_builtins.c
 SRC_TESTS += test_args.c
 SRC_TESTS += test_args_parser.c
 
