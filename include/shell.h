@@ -18,6 +18,7 @@ typedef struct {
     bool is_running;
     input_t *input;
     env_t *env;
+    char *path;
 } shell_t;
 
 status_t shell_run(char **envp);

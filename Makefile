@@ -41,6 +41,7 @@ SRC += args_parser.c
 VPATH += src/builtins
 SRC += exit.c
 SRC += echo.c
+SRC += cd.c
 
 # ↓ Sources to add in debug mode
 SRC_DEBUG := $(SRC)
@@ -55,6 +56,7 @@ SRC_TESTS += test_args_parser.c
 VPATH += tests/cmd
 SRC_TESTS += test_builtin_exit.c
 SRC_TESTS += test_builtin_echo.c
+SRC_TESTS += test_builtin_cd.c
 SRC_TESTS += test_not_found.c
 
 # ↓ Objects

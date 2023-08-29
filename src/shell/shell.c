@@ -20,6 +20,7 @@ shell_t *shell_init(char **envp)
         .input = input_init(),
         .env = env_init(envp),
         .is_running = true,
+        .path = getenv("PWD"),
     };
     if (shell->input == NULL || shell->env == NULL) {
         shell_free(shell);
