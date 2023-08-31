@@ -7,26 +7,31 @@
 #include "debug.h"
 
 static
-void change_directory(shell_t *shell, char *path)
+int change_directory(shell_t *shell, char *path)
 {
     DEBUG("Changing dir: `%s`", path);
     shell->path = path;
     chdir(path);
     setenv("PWD", path, true);
+    return EXIT_SUCCESS;
 }
 
 int builtin_cd(shell_t *shell)
 {
     args_t *args = shell->input->args;
+    char *path = NULL;
 
     if (args->argc >= 3) {
         fprintf(stderr, "cd: too many arguments\n");
         return EXIT_FAILURE;
     }
     if (args->argc <= 1) {
-        change_directory(shell, getenv("HOME"));
-        return EXIT_SUCCESS;
+        path = getenv("HOME");
+        if (path == NULL) {
+            fprintf(stderr, "cd: HOME not set\n");
+            return EXIT_FAILURE;
+        }
+        return change_directory(shell, path);
     }
-    change_directory(shell, args->argv[1]);
-    return EXIT_SUCCESS;
+    return change_directory(shell, args->argv[1]);
 }
