@@ -35,9 +35,14 @@ char *new_path(char *pwd, char *target)
         fprintf(stderr, "cd: path too long\n");
         return NULL;
     }
-    strcat(path, pwd);
-    if (target[0] != '/' && pwd[len_pwd - 1] != '/')
-        strcat(path, "/");
+    if (target[0] == '~') {
+        strcpy(path, getenv("HOME"));
+        target++;
+    } else if (target[0] != '/') {
+        strcat(path, pwd);
+        if (pwd[len_pwd - 1] != '/')
+            strcat(path, "/");
+    }
     strcat(path, target);
     DEBUG("New path: `%s`", path);
     resolved_path = realpath(path, NULL);
@@ -65,10 +70,20 @@ int empty_cd(shell_t *shell)
     return change_directory(shell, path);
 }
 
+static
+int process_path(shell_t *shell, char *target)
+{
+    char *path = new_path(shell->path, target);
+
+    if (path == NULL)
+        return EXIT_FAILURE;
+    DEBUG("Resolved path: `%s`", path);
+    return change_directory(shell, path);
+}
+
 int builtin_cd(shell_t *shell)
 {
     args_t *args = shell->input->args;
-    char *path = NULL;
 
     if (args->argc >= 3) {
         fprintf(stderr, "cd: too many arguments\n");
@@ -76,9 +91,5 @@ int builtin_cd(shell_t *shell)
     }
     if (args->argc <= 1)
         return empty_cd(shell);
-    path = new_path(shell->path, args->argv[1]);
-    if (path == NULL)
-        return EXIT_FAILURE;
-    DEBUG("Resolved path: `%s`", path);
-    return change_directory(shell, path);
+    return process_path(shell, args->argv[1]);
 }
