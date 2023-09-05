@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <limits.h>
 
 #include "shell.h"
 #include "args.h"
@@ -20,12 +21,13 @@ shell_t *shell_init(char **envp)
         .input = input_init(),
         .env = env_init(envp),
         .is_running = true,
-        .path = getenv("PWD"),
+        .path = calloc(PATH_MAX, sizeof(char)),
     };
-    if (shell->input == NULL || shell->env == NULL) {
+    if (shell->input == NULL || shell->env == NULL || shell->path == NULL) {
         shell_free(shell);
         return NULL;
     }
+    strcpy(shell->path, getenv("PWD"));
     return shell;
 }
 
@@ -33,6 +35,8 @@ void shell_free(shell_t *shell)
 {
     if (shell == NULL)
         return;
+    if (shell->path != NULL)
+        free(shell->path);
     input_free(shell->input);
     env_free(shell->env);
     free(shell);
