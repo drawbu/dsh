@@ -11,6 +11,10 @@
 static
 int change_directory(shell_t *shell, char *path)
 {
+    if (path == NULL) {
+        fprintf(stderr, "cd: malloc of new path failed\n");
+        return EXIT_FAILURE;
+    }
     DEBUG("Changing dir: `%s`", path);
     free(shell->path);
     shell->path = path;
@@ -22,16 +26,11 @@ int change_directory(shell_t *shell, char *path)
 static
 char *new_path(char *pwd, char *target)
 {
-    char *path = calloc(PATH_MAX, sizeof(char));
+    char path[PATH_MAX] = {0};
     char *resolved_path = NULL;
     int len_pwd = strlen(pwd);
 
-    if (path == NULL) {
-        fprintf(stderr, "cd: malloc failed\n");
-        return NULL;
-    }
     if (strlen(pwd) + strlen(target) > PATH_MAX) {
-        free(path);
         fprintf(stderr, "cd: path too long\n");
         return NULL;
     }
@@ -48,7 +47,6 @@ char *new_path(char *pwd, char *target)
     resolved_path = realpath(path, NULL);
     if (resolved_path == NULL)
         fprintf(stderr, "cd: %s: No such file or directory\n", path);
-    free(path);
     return resolved_path;
 }
 
@@ -56,18 +54,14 @@ static
 int empty_cd(shell_t *shell)
 {
     char *home = getenv("HOME");
-    char *path = calloc(PATH_MAX, sizeof(char));
+    char path[PATH_MAX] = {0};
 
     if (home == NULL) {
         fprintf(stderr, "cd: HOME not set\n");
         return EXIT_FAILURE;
     }
-    if (path == NULL) {
-        fprintf(stderr, "cd: malloc failed\n");
-        return EXIT_FAILURE;
-    }
     strcpy(path, home);
-    return change_directory(shell, path);
+    return change_directory(shell, strdup(path));
 }
 
 static
