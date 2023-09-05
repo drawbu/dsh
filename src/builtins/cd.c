@@ -16,63 +16,79 @@ int change_directory(shell_t *shell, char *path)
         return EXIT_FAILURE;
     }
     DEBUG("Changing dir: `%s`", path);
-    free(shell->path);
-    shell->path = path;
-    chdir(path);
-    setenv("PWD", path, true);
+    setenv("OLDPWD", shell->path, true);
+    strcpy(shell->path, path);
+    chdir(shell->path);
+    setenv("PWD", shell->path, true);
     return EXIT_SUCCESS;
 }
 
 static
-char *new_path(char *pwd, char *target)
+char *concat_path(char *pwd, char *target, char new_path[PATH_MAX])
 {
-    char path[PATH_MAX] = {0};
-    char *resolved_path = NULL;
-    int len_pwd = strlen(pwd);
+    char *path;
 
-    if (strlen(pwd) + strlen(target) > PATH_MAX) {
-        fprintf(stderr, "cd: path too long\n");
-        return NULL;
+    switch (target[0]) {
+        case '/':
+            break;
+        case '~':
+            path = getenv("HOME");
+            if (path == NULL) {
+                fprintf(stderr, "cd: HOME not set\n");
+                return NULL;
+            }
+            strcpy(new_path, path);
+            target++;
+            break;
+        case '-':
+            if (strlen(target) > 1) {
+                fprintf(stderr, "cd: %s: invalid argument\n", target);
+                return NULL;
+            }
+            path = getenv("OLDPWD");
+            if (path == NULL) {
+                fprintf(stderr, "cd: OLDPWD not set\n");
+                return NULL;
+            }
+            strcpy(new_path, path);
+            return new_path;
+        default:
+            strcpy(new_path, pwd);
+            if (pwd[strlen(pwd) - 1] != '/')
+                strcat(new_path, "/");
+            break;
     }
-    if (target[0] == '~') {
-        strcpy(path, getenv("HOME"));
-        target++;
-    } else if (target[0] != '/') {
-        strcat(path, pwd);
-        if (pwd[len_pwd - 1] != '/')
-            strcat(path, "/");
-    }
-    strcat(path, target);
-    DEBUG("New path: `%s`", path);
-    resolved_path = realpath(path, NULL);
-    if (resolved_path == NULL)
-        fprintf(stderr, "cd: %s: No such file or directory\n", path);
-    return resolved_path;
+    strcat(new_path, target);
+    return new_path;
 }
 
 static
 int empty_cd(shell_t *shell)
 {
     char *home = getenv("HOME");
-    char path[PATH_MAX] = {0};
 
     if (home == NULL) {
         fprintf(stderr, "cd: HOME not set\n");
         return EXIT_FAILURE;
     }
-    strcpy(path, home);
-    return change_directory(shell, strdup(path));
+    return change_directory(shell, home);
 }
 
 static
 int process_path(shell_t *shell, char *target)
 {
-    char *path = new_path(shell->path, target);
+    char merged_path[PATH_MAX] = {0};
+    char resolved_path[PATH_MAX] = {0};
 
-    if (path == NULL)
+    if (concat_path(shell->path, target, merged_path) == NULL)
         return EXIT_FAILURE;
-    DEBUG("Resolved path: `%s`", path);
-    return change_directory(shell, path);
+    DEBUG("New path: `%s`", merged_path);
+    if (realpath(merged_path, resolved_path) == NULL) {
+        fprintf(stderr, "cd: %s: No such file or directory\n", merged_path);
+        return EXIT_FAILURE;
+    }
+    DEBUG("Resolved path: `%s`", resolved_path);
+    return change_directory(shell, resolved_path);
 }
 
 int builtin_cd(shell_t *shell)
