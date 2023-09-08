@@ -3,6 +3,7 @@
 #include <string.h>
 #include <limits.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "args.h"
 #include "shell.h"
@@ -16,9 +17,12 @@ int change_directory(shell_t *shell, char *path)
         return EXIT_FAILURE;
     }
     DEBUG("Changing dir: `%s`", path);
-    setenv("OLDPWD", shell->path, true);
+    if (chdir(path) != 0) {
+        fprintf(stderr, "cd: %s: %s\n", path, strerror(errno));
+        return EXIT_FAILURE;
+    }
     strcpy(shell->path, path);
-    chdir(shell->path);
+    setenv("OLDPWD", shell->path, true);
     setenv("PWD", shell->path, true);
     return EXIT_SUCCESS;
 }
