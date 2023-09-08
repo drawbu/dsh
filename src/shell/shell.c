@@ -21,9 +21,9 @@ shell_t *shell_init(char **envp)
         .input = input_init(),
         .env = env_init(envp),
         .is_running = true,
-        .path = calloc(PATH_MAX, sizeof(char)),
+        .path = {0},
     };
-    if (shell->input == NULL || shell->env == NULL || shell->path == NULL) {
+    if (shell->input == NULL || shell->env == NULL) {
         shell_free(shell);
         return NULL;
     }
@@ -35,8 +35,6 @@ void shell_free(shell_t *shell)
 {
     if (shell == NULL)
         return;
-    if (shell->path != NULL)
-        free(shell->path);
     input_free(shell->input);
     env_free(shell->env);
     free(shell);

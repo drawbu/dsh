@@ -3,6 +3,7 @@
 
     #include <stdbool.h>
     #include <stdlib.h>
+    #include <limits.h>
 
     #include "args.h"
     #include "status.h"
@@ -18,7 +19,7 @@ typedef struct {
     bool is_running;
     input_t *input;
     env_t *env;
-    char *path;
+    char path[PATH_MAX];
 } shell_t;
 
 status_t shell_run(char **envp);
