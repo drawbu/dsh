@@ -41,4 +41,3 @@ Test(builtin_cd, root, .init = redirect) {
     cr_assert_stderr_eq_str("");
     shell_free(shell);
 }
-
